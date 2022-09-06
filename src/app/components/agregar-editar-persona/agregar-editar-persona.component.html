@@ -9,6 +9,14 @@
           <mat-label>Nombre</mat-label>
           <input formControlName="nombre" matInput placeholder="Ingrese Nombre" autocomplete="off">
         </mat-form-field>
+        <div class="error">
+          <span *ngIf="form.get('nombre')?.hasError('required') && form.get('nombre')?.touched">
+            El nombre es un campo <strong>requerido</strong>  
+          </span>
+          <span *ngIf="form.get('nombre')?.hasError('maxlength')">
+            El nombre debe tener como maximo <strong>20 caracteres</strong> 
+          </span>
+        </div>
       </div>
   
       <div class="column">
@@ -16,6 +24,11 @@
           <mat-label>Apellido</mat-label>
           <input formControlName="apellido" matInput placeholder="Ingrese Apellido" autocomplete="off">
         </mat-form-field>
+        <div class="error">
+          <span *ngIf="form.get('apellido')?.hasError('required') && form.get('apellido')?.touched">
+            El apellido es un campo <strong>requerido</strong>  
+          </span>
+        </div>
       </div>
     </div>
   
@@ -25,6 +38,14 @@
           <mat-label>Correo</mat-label>
           <input formControlName="correo" matInput placeholder="Ingrese Correo" autocomplete="off">
         </mat-form-field>
+        <div class="error">
+          <span *ngIf="form.get('correo')?.hasError('required') && form.get('correo')?.touched">
+            El correo es un campo <strong>requerido</strong>  
+          </span>
+          <span *ngIf="form.get('correo')?.hasError('email') && form.get('correo')?.touched">
+            El correo es <strong>invalido</strong>
+          </span>
+        </div>
       </div>
     </div>
   
@@ -45,6 +66,14 @@
           <mat-label>Documento</mat-label>
           <input formControlName="documento" matInput placeholder="Ingrese Documento" autocomplete="off">
         </mat-form-field>
+        <div class="error">
+          <span *ngIf="form.get('documento')?.hasError('required') && form.get('documento')?.touched">
+            El documento es un campo <strong>requerido</strong>  
+          </span>
+          <span *ngIf="form.get('documento')?.hasError('pattern')">
+            El documento debe tener solo <strong>numeros</strong>
+          </span>
+        </div>
       </div>
     </div>
   
@@ -52,10 +81,15 @@
       <div class="column">
         <mat-form-field class="example-full-width" appearance="fill">
           <mat-label>Fecha Nacimiento</mat-label>
-          <input formControlName="fechaNacimiento" matInput [matDatepicker]="picker">
+          <input [max]="maxDate" formControlName="fechaNacimiento" matInput [matDatepicker]="picker">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker touchUi #picker></mat-datepicker>
         </mat-form-field>
+        <div class="error">
+          <span *ngIf="form.get('fechaNacimiento')?.hasError('required') && form.get('fechaNacimiento')?.touched">
+            El fecha nacimiento es un campo <strong>requerido</strong>  
+          </span>
+        </div>
       </div>
     </div>
   </mat-dialog-content>

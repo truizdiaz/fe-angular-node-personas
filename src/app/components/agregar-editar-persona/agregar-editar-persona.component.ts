@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Persona } from 'src/app/interfaces/persona';
 
@@ -11,16 +11,18 @@ import { Persona } from 'src/app/interfaces/persona';
 export class AgregarEditarPersonaComponent implements OnInit {
   tipoDocumento: string[] = ['DNI', 'Libreta Civica', 'Pasaporte'];
   form: FormGroup;
+  maxDate: Date;
 
   constructor(public dialogRef: MatDialogRef<AgregarEditarPersonaComponent>,
     private fb: FormBuilder) {
+      this.maxDate = new Date();
       this.form = this.fb.group({
-        nombre: [''],
-        apellido: [''],
-        correo: [''],
-        tipoDocumento: [null],
-        documento: [null],
-        fechaNacimiento: [null],
+        nombre: ['', [Validators.required, Validators.maxLength(20)]],
+        apellido: ['', Validators.required],
+        correo: ['', [Validators.required, Validators.email]],
+        tipoDocumento: [null, Validators.required],
+        documento: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+        fechaNacimiento: [null, Validators.required],
       })
      }
 
@@ -32,6 +34,10 @@ export class AgregarEditarPersonaComponent implements OnInit {
   }
 
   addEditPersona() {
+
+    if(this.form.invalid) {
+      return;
+    }
     
     const persona: Persona = {
       nombre: this.form.value.nombre,
@@ -41,7 +47,7 @@ export class AgregarEditarPersonaComponent implements OnInit {
       documento: this.form.value.documento,
       fechaNacimiento: this.form.value.fechaNacimiento
     }
-    console.log(persona);
+    console.log(this.form);
    
     
   }

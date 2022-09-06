@@ -10,3 +10,8 @@ mat-form-field {
     flex: 50%;
     margin: 0px 5px;
 }
+
+.error {
+    color:#B0304B;
+    margin-top: -10px;
+}
