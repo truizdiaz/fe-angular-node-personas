@@ -33,7 +33,6 @@ export class ListPersonasComponent implements OnInit, AfterViewInit  {
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.paginator._intl.itemsPerPageLabel = "Items por pagina"
   }
 
 }
