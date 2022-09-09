@@ -73,10 +73,13 @@ export class ListPersonasComponent implements OnInit, AfterViewInit  {
 
   deletePersona(id: number) {
     this.loading = true;
-    this._personaService.deletePersona(id).subscribe(() => {
-      this.obtenerPersonas();
-      this.mensajeExito();
-    })
+
+    setTimeout(() => {
+      this._personaService.deletePersona(id).subscribe(() => {
+        this.obtenerPersonas();
+        this.mensajeExito();
+      })
+    }, 1000);
   }
 
   mensajeExito() {

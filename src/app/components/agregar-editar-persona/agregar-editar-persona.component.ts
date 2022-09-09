@@ -20,7 +20,7 @@ export class AgregarEditarPersonaComponent implements OnInit {
   id: number | undefined;
 
   constructor(public dialogRef: MatDialogRef<AgregarEditarPersonaComponent>,
-    private fb: FormBuilder, private _personaService: PersonaService, 
+    private fb: FormBuilder, private _personaService: PersonaService,
     private _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.maxDate = new Date();
     this.form = this.fb.group({
@@ -30,7 +30,7 @@ export class AgregarEditarPersonaComponent implements OnInit {
       tipoDocumento: [null, Validators.required],
       documento: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
       fechaNacimiento: [null, Validators.required],
-    }) 
+    })
     this.id = data.id;
   }
 
@@ -39,7 +39,7 @@ export class AgregarEditarPersonaComponent implements OnInit {
   }
 
   esEditar(id: number | undefined) {
-    if(id !== undefined) {
+    if (id !== undefined) {
       this.operacion = 'Editar ';
       this.getPersona(id);
     }
@@ -77,15 +77,16 @@ export class AgregarEditarPersonaComponent implements OnInit {
       documento: this.form.value.documento,
       fechaNacimiento: this.form.value.fechaNacimiento.toISOString().slice(0, 10)
     }
-    
+
     this.loading = true;
 
-    if(this.id == undefined) {
+    if (this.id == undefined) {
 
       // Es agregar
       this._personaService.addPersona(persona).subscribe(() => {
         this.mensajeExito('agregada');
       })
+
     } else {
 
       // Es editar
@@ -93,8 +94,6 @@ export class AgregarEditarPersonaComponent implements OnInit {
         this.mensajeExito('actualizada');
       })
     }
-    this.loading = false;
-    this.dialogRef.close(true);
   }
 
   mensajeExito(operacion: string) {
