@@ -23,4 +23,8 @@ export class PersonaService {
   deletePersona(id: number): Observable<void> {
     return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`);
   }
+
+  addPersona(persona: Persona): Observable<void> {
+    return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}`, persona);
+  }
 }

@@ -1,4 +1,7 @@
-<h2 mat-dialog-title>Agregar Persona</h2>
+<div class="container">
+  <h2 mat-dialog-title>Agregar Persona</h2>
+  <mat-spinner *ngIf="loading" [diameter]="30"></mat-spinner>
+</div>
 <form [formGroup]="form" (ngSubmit)="addEditPersona()">
 
   <mat-dialog-content >

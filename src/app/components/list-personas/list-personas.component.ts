@@ -64,7 +64,9 @@ export class ListPersonasComponent implements OnInit, AfterViewInit  {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      if(result) {
+        this.obtenerPersonas();
+      }
     });
   }
 
