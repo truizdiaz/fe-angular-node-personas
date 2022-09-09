@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { DateAdapter } from '@angular/material/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Persona } from 'src/app/interfaces/persona';
 import { PersonaService } from 'src/app/services/persona.service';
@@ -15,9 +16,12 @@ export class AgregarEditarPersonaComponent implements OnInit {
   form: FormGroup;
   maxDate: Date;
   loading: boolean = false;
+  operacion: string = 'Agregar ';
+  id: number | undefined;
 
   constructor(public dialogRef: MatDialogRef<AgregarEditarPersonaComponent>,
-    private fb: FormBuilder, private _personaService: PersonaService, private _snackBar: MatSnackBar) {
+    private fb: FormBuilder, private _personaService: PersonaService, 
+    private _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.maxDate = new Date();
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(20)]],
@@ -26,10 +30,33 @@ export class AgregarEditarPersonaComponent implements OnInit {
       tipoDocumento: [null, Validators.required],
       documento: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
       fechaNacimiento: [null, Validators.required],
-    })
+    }) 
+    this.id = data.id;
   }
 
   ngOnInit(): void {
+    this.esEditar(this.id);
+  }
+
+  esEditar(id: number | undefined) {
+    if(id !== undefined) {
+      this.operacion = 'Editar ';
+      this.getPersona(id);
+    }
+  }
+
+  getPersona(id: number) {
+    this._personaService.getPersona(id).subscribe(data => {
+      console.log(data.fechaNacimiento)
+      this.form.setValue({
+        nombre: data.nombre,
+        apellido: data.apellido,
+        correo: data.correo,
+        tipoDocumento: data.tipoDocumento,
+        documento: data.documento,
+        fechaNacimiento: new Date(data.fechaNacimiento) // 2022-03-04
+      })
+    })
   }
 
   cancelar() {
@@ -41,7 +68,7 @@ export class AgregarEditarPersonaComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-
+    console.log(this.form.value.fechaNacimiento);
     const persona: Persona = {
       nombre: this.form.value.nombre,
       apellido: this.form.value.apellido,
@@ -50,20 +77,28 @@ export class AgregarEditarPersonaComponent implements OnInit {
       documento: this.form.value.documento,
       fechaNacimiento: this.form.value.fechaNacimiento.toISOString().slice(0, 10)
     }
-    console.log(persona.fechaNacimiento)
-
+    
     this.loading = true;
 
-    this._personaService.addPersona(persona).subscribe(() => {
-      this.loading = false;
-      this.mensajeExito();
-      this.dialogRef.close(true);
-      
-    })
+    if(this.id == undefined) {
+
+      // Es agregar
+      this._personaService.addPersona(persona).subscribe(() => {
+        this.mensajeExito('agregada');
+      })
+    } else {
+
+      // Es editar
+      this._personaService.updatePersona(this.id, persona).subscribe(data => {
+        this.mensajeExito('actualizada');
+      })
+    }
+    this.loading = false;
+    this.dialogRef.close(true);
   }
 
-  mensajeExito() {
-    this._snackBar.open('La persona fue agregada con exito', '', {
+  mensajeExito(operacion: string) {
+    this._snackBar.open(`La persona fue ${operacion} con exito`, '', {
       duration: 2000
     });
   }

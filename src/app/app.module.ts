@@ -11,6 +11,8 @@ import { AgregarEditarPersonaComponent } from './components/agregar-editar-perso
 // Modulos
 import { SharedModule } from './shared/shared.module';
 
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +24,11 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     SharedModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: MAT_DATE_LOCALE, useValue: 'es'
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
