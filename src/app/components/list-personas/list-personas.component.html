@@ -1,6 +1,7 @@
 <mat-toolbar>
     <span>Listado de Personas</span>
 </mat-toolbar>
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
 <mat-card>
     <mat-form-field appearance="standard">
@@ -43,7 +44,7 @@
             <th mat-header-cell *matHeaderCellDef> </th>
             <td mat-cell *matCellDef="let element"> 
                 <mat-icon class="btnEdit" matTooltip="Editar">edit</mat-icon>
-                <mat-icon class="btnDelete" matTooltip="Delete">delete</mat-icon>
+                <mat-icon (click)="deletePersona(element.id)" class="btnDelete" matTooltip="Delete">delete</mat-icon>
             </td>
         </ng-container>
 

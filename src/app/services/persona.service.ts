@@ -13,10 +13,14 @@ export class PersonaService {
 
   constructor(private http: HttpClient) { 
     this.myAppUrl = environment.endpoint;
-    this.myApiUrl = 'api/personas'
+    this.myApiUrl = 'api/personas/'
   }
 
   getPersonas(): Observable<Persona[]> {
     return this.http.get<Persona[]>(`${this.myAppUrl}${this.myApiUrl}`)
+  }
+
+  deletePersona(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.myAppUrl}${this.myApiUrl}${id}`);
   }
 }

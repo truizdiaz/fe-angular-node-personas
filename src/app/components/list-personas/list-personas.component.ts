@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Persona } from 'src/app/interfaces/persona';
@@ -16,11 +17,13 @@ import { AgregarEditarPersonaComponent } from '../agregar-editar-persona/agregar
 export class ListPersonasComponent implements OnInit, AfterViewInit  {
   displayedColumns: string[] = ['nombre', 'apellido', 'correo', 'tipoDocumento', 'documento', 'fechaNacimiento', 'acciones'];
   dataSource: MatTableDataSource<Persona>;
+  loading: boolean = false;
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   
-  constructor(public dialog: MatDialog, private _personaService: PersonaService) { 
+  constructor(public dialog: MatDialog, private _personaService: PersonaService,
+    private _snackBar: MatSnackBar) { 
     this.dataSource = new MatTableDataSource();
   }
 
@@ -34,11 +37,15 @@ export class ListPersonasComponent implements OnInit, AfterViewInit  {
   }
 
   obtenerPersonas() {
+    this.loading = true;
+
     this._personaService.getPersonas().subscribe(data => {
+      this.loading = false;
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+      this.dataSource.sort = this.sort;
     })
+    
   }
 
   applyFilter(event: Event) {
@@ -58,6 +65,20 @@ export class ListPersonasComponent implements OnInit, AfterViewInit  {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+    });
+  }
+
+  deletePersona(id: number) {
+    this.loading = true;
+    this._personaService.deletePersona(id).subscribe(() => {
+      this.obtenerPersonas();
+      this.mensajeExito();
+    })
+  }
+
+  mensajeExito() {
+    this._snackBar.open('La persona fue eliminada con exito', '', {
+      duration: 2000
     });
   }
 
